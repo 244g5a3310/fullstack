@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>To Do List</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #a8edea, #fed6e3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.2);
+      width: 400px;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+
+    .options {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 10px;
+    }
+
+    button {
+      background: #28a745;
+      border: none;
+      color: white;
+      padding: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    button:hover {
+      background: #218838;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background: #f9f9f9;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btns button {
+      margin-left: 5px;
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 6px;
+    }
+
+    .done {
+      background: #17a2b8;
+    }
+
+    .done:hover {
+      background: #138496;
+    }
+
+    .deleteBtn {
+      background: #dc3545;
+    }
+
+    .deleteBtn:hover {
+      background: #c82333;
+    }
+
+    .completed-task {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .completed {
+      text-decoration: line-through;
+    }
+
+    .section-title {
+      font-weight: bold;
+      margin-top: 30px;
+      margin-bottom: 10px;
+      font-size: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>TO DO TASKS</h2>
+    <form id="todoForm">
+      <input type="text" id="taskInput" placeholder="Enter a task" />
+      <div class="options">
+        <label><input type="radio" name="position" value="append" checked /> Add to Bottom</label>
+        <label><input type="radio" name="position" value="prepend" /> Add to Top</label>
+      </div>
+      <button type="submit">Add Task</button>
+    </form>
+    <ul id="taskList"></ul>
+  </div>
+
+  <!-- Completed Tasks Section -->
+  <div class="container">
+    <h2>COMPLETED TASKS</h2>
+    <ul id="completedTasks"></ul>
+  </div>
+
+  <script>
+    $(document).ready(function () {
+      $("#todoForm").on("submit", function (e) {
+        e.preventDefault();
+        let task = $("#taskInput").val();
+        let position = $("input[name='position']:checked").val();
+        if (task.trim()) {
+          const taskItem = `
+            <li>
+              <span class="taskText">${task}</span>
+              <div class="btns">
+                <button class="done">Done</button>
+                <button class="deleteBtn">Delete</button>
+              </div>
+            </li>`;
+          position === "prepend"
+            ? $("#taskList").prepend(taskItem)
+            : $("#taskList").append(taskItem);
+          $("#taskInput").val("");
+        }
+      });
+
+      // Delete task
+      $("body").on("click", ".deleteBtn", function () {
+        $(this).closest("li").remove();
+      });
+
+      // Complete task
+      $("body").on("click", ".done", function () {
+        const taskLi = $(this).closest("li");
+        const taskText = taskLi.find(".taskText").text();
+        const completedItem = `
+          <li class="completed-task">
+            <span class="taskText completed">${taskText}</span>
+            <div class="btns">
+              <button class="deleteBtn">Delete</button>
+            </div>
+          </li>`;
+        $("#completedTasks").append(completedItem);
+        taskLi.remove(); // Remove from main list
+      });
+    });
+  </script>
+</body>
+</html>
